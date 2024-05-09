@@ -118,7 +118,10 @@ def recycle_old_connections(**_):
     for alias in connections:
         aliases.append(alias)
         conn = connections[alias]
-        ConnectionHandler.connection_pool[alias].release(conn)
+        try:
+            ConnectionHandler.connection_pool[alias].release(conn)
+        except KeyError:
+            pass
 
     for alias in aliases:
         del connections[alias]      # unbind conn from green-let local
